@@ -1,3 +1,13 @@
 C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
 C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.manifest
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.application
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Credit card.csprojResolveAssemblyReference.cache
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Credit card.csproj.GenerateResource.Cache
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe.manifest
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.application

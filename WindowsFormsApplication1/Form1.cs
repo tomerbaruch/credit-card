@@ -11,16 +11,19 @@ using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Windows.Input;
 using System.Net.Mail;
+using System.Reflection;
 
 namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
         bankType bankType;
+        int month_col;
 
         public Form1()
         {
             InitializeComponent();
+            comboBox1.SelectedIndex = 0;
         }
 
         private void link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -55,6 +58,8 @@ namespace WindowsFormsApplication1
 
        void credit(){
             Dictionary<string, string> shop_category_hash = loadHash();
+            Dictionary<string, int> exolidit_hash = loadExoliditHash();
+            
             Dictionary<string, double?> result_map = new Dictionary<string, double?>();
             Dictionary<string, int?> shops = new Dictionary<string, int?>();
 
@@ -76,6 +81,8 @@ namespace WindowsFormsApplication1
                         row = 12;
                         shop_name = excelSheet.Cells[12, 3].Value.ToString();
                         money = excelSheet.Cells[12, 5].Value;
+                        first_col = 3;
+                        second_col = 5;
                         break;
                     case bankType.Cal:
                         row = 9;
@@ -159,7 +166,10 @@ namespace WindowsFormsApplication1
                 print_attention(shops);
                 textBox2.Text += sum;
                 wb.Close();
+                excel.Quit();
                 string user = Console.ReadLine();
+
+                saveToExolidit(result_map, exolidit_hash);
 
 
             }
@@ -176,7 +186,53 @@ namespace WindowsFormsApplication1
 
         }
 
+        private void saveToExolidit(Dictionary<string, double?> result_map, Dictionary<string, int> exolidit_map)
+        {
+            string path = openFileDialog4.FileName;
+            double sum = 0;
+            double money = 0;
+            int first_col = 0, second_col = 0;
+            String shop_name = "";
 
+            Excel.Application excel = new Excel.Application();
+            Excel.Workbook wb = excel.Workbooks.Open(path);
+            Excel.Worksheet excelSheet = wb.ActiveSheet;
+
+            foreach (string category in result_map.Keys)
+            {
+                double value = result_map[category].Value;
+                int row = 0;
+                if (exolidit_map.ContainsKey(category))
+                {
+                    row = exolidit_map[category];
+                }
+                else
+                {
+                    String str_row = Microsoft.VisualBasic.Interaction.InputBox("Enter row for " + category, "New category", "Enter category here", 450, 300).ToString();
+
+                    try
+                    {
+                        using (StreamWriter sw = new StreamWriter("C:\\credit\\exolidit.txt", true, System.Text.Encoding.GetEncoding(1255), 512))
+                        {
+                            sw.WriteLine(category + "#" + str_row);
+                            row = Convert.ToInt32(str_row);
+                            sw.Close();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                excelSheet.Cells[row, month_col].Value = excelSheet.Cells[row, month_col].Value + value;
+            }
+            excel.DisplayAlerts = false;
+            wb.SaveAs(path, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Excel.XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing,
+                        Type.Missing, Type.Missing);
+            wb.Close();
+            //wb.Close(true, path);
+            excel.Quit();
+            Microsoft.VisualBasic.Interaction.MsgBox("Finished update Exolidit.");
+        }
 
         public void print_attention(Dictionary<string, int?> shops)
         {
@@ -263,11 +319,59 @@ namespace WindowsFormsApplication1
             }
         }
 
+        public Dictionary<string, int> loadExoliditHash()
+        {
+            Dictionary<string, int> category_exolidit_row_hash = new Dictionary<string, int>();
+
+            if (!Directory.Exists("C:\\credit")){
+                Directory.CreateDirectory("C:\\credit");
+            }
+
+
+            if (!File.Exists("C:\\credit\\exolidit.txt"))
+            {
+                File.CreateText("C:\\credit\\exolidit.txt");
+            }
+
+
+            System.IO.StreamReader br = new System.IO.StreamReader("C:\\credit\\exolidit.txt", System.Text.Encoding.GetEncoding(1255));
+            try
+            {
+                string line = br.ReadLine();
+
+                while (line != null)
+                {
+                    string[] arr = line.Split('#');
+                    if (category_exolidit_row_hash.ContainsKey(arr[0]))
+                    {
+                        line = br.ReadLine();
+                        continue;
+                    }
+                    string category = arr[0];
+                    int row = Convert.ToInt32(arr[1]);
+                    category_exolidit_row_hash[category] = row;
+                    line = br.ReadLine();
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                br.Close();
+            }
+
+
+            return category_exolidit_row_hash;
+        }
+
         public Dictionary<string, string> loadHash()
         {
             Dictionary<string, string> shop_category_hash = new Dictionary<string, string>();
 
-            if (!Directory.Exists("C:\\credit")){
+            if (!Directory.Exists("C:\\credit"))
+            {
                 Directory.CreateDirectory("C:\\credit");
             }
 
@@ -382,6 +486,53 @@ namespace WindowsFormsApplication1
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
             bankType = bankType.Poalim;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void openFileDialog4_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            openFileDialog4.InitialDirectory = "C:\\";
+            openFileDialog4.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+            openFileDialog4.ShowDialog();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+            String selectedValue = (String)cmb.SelectedItem;
+            int selectedIndex = cmb.SelectedIndex;
+            switch (selectedValue)
+            {
+                case "January":
+                case "February":
+                case "March":
+                case "April":
+                case "May":
+                case "June":
+                case "July":
+                case "August":
+                case "September":
+                case "October":
+                    month_col = selectedIndex+5;
+                    break;
+                case "November":
+                    month_col = 3;
+                    break;
+                case "December":
+                    month_col = 4;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
