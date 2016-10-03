@@ -12,6 +12,8 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Windows.Input;
 using System.Net.Mail;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace WindowsFormsApplication1
 {
@@ -125,7 +127,6 @@ namespace WindowsFormsApplication1
                 while (shop_name != null && !shop_name.Equals(""))
                 {
                     sum += money;
-                    double curr_sum;
                     if (shop_category_hash.ContainsKey(shop_name))
                     {
                         if (shops.ContainsKey(shop_name))
@@ -159,7 +160,8 @@ namespace WindowsFormsApplication1
 
                     row++;
                     shop_name = excelSheet.Cells[row, first_col].Value;
-                    money = excelSheet.Cells[row, second_col].Value != null ? excelSheet.Cells[row, second_col].Value : -10000000;
+                    money = excelSheet.Cells[row, second_col].Value != null 
+                        && !excelSheet.Cells[row, second_col].Value.Equals("") ? excelSheet.Cells[row, second_col].Value : 0;
                 }
 
                 print_result(result_map);
@@ -167,6 +169,8 @@ namespace WindowsFormsApplication1
                 textBox2.Text += sum;
                 wb.Close();
                 excel.Quit();
+                Marshal.ReleaseComObject(excelSheet);
+                Marshal.ReleaseComObject(wb);
                 string user = Console.ReadLine();
 
                 saveToExolidit(result_map, exolidit_hash);
@@ -183,20 +187,24 @@ namespace WindowsFormsApplication1
                 Console.WriteLine(e.ToString());
                 Console.Write(e.StackTrace);
             }
+            catch (RuntimeBinderException ex)
+            {
+                Microsoft.VisualBasic.Interaction.MsgBox("Credit card file is invalid");
+            }
 
         }
 
         private void saveToExolidit(Dictionary<string, double?> result_map, Dictionary<string, int> exolidit_map)
         {
             string path = openFileDialog4.FileName;
-            double sum = 0;
-            double money = 0;
-            int first_col = 0, second_col = 0;
-            String shop_name = "";
+            if (path.Equals(""))
+            {
+                return;
+            }
 
             Excel.Application excel = new Excel.Application();
             Excel.Workbook wb = excel.Workbooks.Open(path);
-            Excel.Worksheet excelSheet = wb.ActiveSheet;
+            Excel.Worksheet worksheet = wb.ActiveSheet;
 
             foreach (string category in result_map.Keys)
             {
@@ -223,14 +231,16 @@ namespace WindowsFormsApplication1
                     {
                     }
                 }
-                excelSheet.Cells[row, month_col].Value = excelSheet.Cells[row, month_col].Value + value;
+                worksheet.Cells[row, month_col].Value =
+                    worksheet.Cells[row, month_col].Value == null || worksheet.Cells[row, month_col].Value.Equals("") ?
+                    value : worksheet.Cells[row, month_col].Value + value;
             }
             excel.DisplayAlerts = false;
-            wb.SaveAs(path, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Excel.XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing,
-                        Type.Missing, Type.Missing);
-            wb.Close();
-            //wb.Close(true, path);
+            wb.Save();
+            wb.Close(true);
             excel.Quit();
+            Marshal.ReleaseComObject(worksheet);
+            Marshal.ReleaseComObject(wb);
             Microsoft.VisualBasic.Interaction.MsgBox("Finished update Exolidit.");
         }
 
@@ -243,66 +253,18 @@ namespace WindowsFormsApplication1
                 if (value > 1)
                 {
                     textBox2.Text += "Pay attention you have " + value + " charges from " + key + "\r\n";
-                    //Console.WriteLine("Pay attention you have " + value + " charges from " + key);
                 }
             }
         }
 
         public void print_result(Dictionary<string, double?> result_map)
         {
-            int ypos = 300;
             foreach (string name in result_map.Keys)
             {
                 string key = name;
                 double? value = result_map[name];
 
-                //LinkLabel link = new LinkLabel();
-                //link.Text = key + " " + value +"\r\n";
-                //link.LinkClicked += new LinkLabelLinkClickedEventHandler(this.link_LinkClicked);
-                //LinkLabel.Link data = new LinkLabel.Link();
-                //data.LinkData = key + " " + value +"\r\n"; ;
-                //link.Links.Add(data);
-                //link.AutoSize = true;
-                //link.Location = new System.Drawing.Point(100, ypos);
-                //link.TabIndex = 9999;
-                //ypos += 10;
-
-
-                ///
-                // Create the LinkLabel.
-                //this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-
-                //// Configure the LinkLabel's location. 
-                //this.linkLabel1.Location = new System.Drawing.Point(100, 300);
-                //// Specify that the size should be automatically determined by the content.
-                //this.linkLabel1.AutoSize = true;
-
-                //this.linkLabel1.TabIndex = 2;
-
-                //// Add an event handler to do something when the links are clicked.
-                //this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.link_LinkClicked);
-
-                //// Set the text for the LinkLabel.
-                //this.linkLabel1.Text = key + " " + value + "\r\n";
-
-                //// Set up how the form should be displayed and add the controls to the form.
-                //this.Controls.AddRange(new System.Windows.Forms.Control[] { this.linkLabel1 });
-                //this.Text = key + " " + value + "\r\n";
-
-                //link.LinkClicked += new LinkLabelLinkClickedEventHandler(this.link_LinkClicked);
-                //LinkLabel.Link data = new LinkLabel.Link();
-                //data.LinkData = key + " " + value + "\r\n"; ;
-                //link.Links.Add(data);
-                ///
-
-
-                //this.richTextBox1.Controls.Add(link);
-                //this.richTextBox1.AppendText(link.Text);
-                //this.richTextBox1.SelectionStart = this.richTextBox1.TextLength;
-
-
                 textBox2.Text += key + " " + value + "\r\n";
-                //Console.WriteLine(key + " " + value);
             }
         }
 

@@ -205,7 +205,7 @@ namespace WindowsFormsApplication1
             // 
             // openFileDialog4
             // 
-            this.openFileDialog4.FileName = "openFileDialog4";
+            this.openFileDialog4.FileName = "";
             // 
             // button4
             // 
@@ -285,7 +285,6 @@ namespace WindowsFormsApplication1
         private System.Windows.Forms.OpenFileDialog openFileDialog2;
         private System.Windows.Forms.OpenFileDialog openFileDialog3;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.OpenFileDialog openFileDialog4;
