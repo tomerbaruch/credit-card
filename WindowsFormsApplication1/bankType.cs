@@ -8,6 +8,7 @@ namespace WindowsFormsApplication1
 {
     enum bankType
     {
+        Unknown,
         Leumi,
         Cal,
         Poalim,

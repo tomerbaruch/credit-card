@@ -19,7 +19,7 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
-        bankType bankType;
+        bankType bankType = bankType.Unknown;
         int month_col;
 
         public Form1()
@@ -79,6 +79,9 @@ namespace WindowsFormsApplication1
                 Excel.Worksheet excelSheet = wb.ActiveSheet;
 
                 switch (bankType){
+                    case bankType.Unknown:
+                        Microsoft.VisualBasic.Interaction.MsgBox("Please choose bank");
+                        return;
                     case bankType.Leumi:
                         row = 12;
                         shop_name = excelSheet.Cells[12, 3].Value.ToString();
