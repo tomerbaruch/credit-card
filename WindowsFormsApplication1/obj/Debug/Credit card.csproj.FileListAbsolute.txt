@@ -11,3 +11,4 @@ C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsAp
 C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Credit card.csproj.GenerateResource.Cache
 C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe.manifest
 C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.application
+C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.income.resources

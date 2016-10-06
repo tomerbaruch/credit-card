@@ -20,7 +20,7 @@ namespace WindowsFormsApplication1
     public partial class Form1 : Form
     {
         bankType bankType = bankType.Unknown;
-        int month_col;
+        public static int month_col;
 
         public Form1()
         {
@@ -200,10 +200,10 @@ namespace WindowsFormsApplication1
         private void saveToExolidit(Dictionary<string, double?> result_map, Dictionary<string, int> exolidit_map)
         {
             string path = openFileDialog4.FileName;
-            if (path.Equals(""))
-            {
-                return;
-            }
+            //if (path.Equals(""))
+            //{
+            //    return;
+            //}
 
             Excel.Application excel = new Excel.Application();
             Excel.Workbook wb = excel.Workbooks.Open(path);
@@ -498,6 +498,12 @@ namespace WindowsFormsApplication1
                 default:
                     break;
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Income income = new Income();
+            income.Show();
         }
     }
 
