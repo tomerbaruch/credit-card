@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
-using System.Windows.Input;
-using System.Net.Mail;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using Microsoft.CSharp.RuntimeBinder;
 using System.Text.RegularExpressions;
 
-namespace WindowsFormsApplication1
+namespace CreditCardAnalyzer
 {
     public partial class Form1 : Form
     {
@@ -72,50 +64,6 @@ namespace WindowsFormsApplication1
                 Excel.Workbook wb = excel.Workbooks.Open(path);
                 Excel.Worksheet excelSheet = wb.ActiveSheet;
 
-				//           switch (bankType){
-				//               case bankType.Unknown:
-				//                   Microsoft.VisualBasic.Interaction.MsgBox("Please choose bank");
-				//                   return;
-				//               case bankType.Leumi:
-				//                   row = 12;
-				//                   shop_name = excelSheet.Cells[12, 3].Value.ToString();
-				//                   money = excelSheet.Cells[12, 5].Value;
-				//                   first_col = 3;
-				//                   second_col = 5;
-				//                   break;
-				//               case bankType.Cal:
-				//                   //row = 9;
-				//                   //shop_name = excelSheet.Cells[9, 2].Value.ToString();
-				//                   //money = excelSheet.Cells[9, 5].Value;
-				//                   //first_col = 2;
-				//                   //second_col = 5;
-				//                   //break;
-				//                   row = 4;
-				//                   shop_name = excelSheet.Cells[row, 2].Value.ToString();
-				//                   money = excelSheet.Cells[row, 4].Value;
-				//                   first_col = 2;
-				//                   second_col = 4;
-				//                   break;
-				//               case bankType.Poalim:
-				//                   row = 7;
-				//                   shop_name = excelSheet.Cells[row, 2].Value.ToString();
-				//                   money = excelSheet.Cells[row, 5].Value;
-				//                   first_col = 2;
-				//                   second_col = 5;
-				//                   break;
-				//case bankType.Benleumi:
-				//	row = 4;
-				//	shop_name = excelSheet.Cells[row, 2].Value.ToString();
-				//	money = excelSheet.Cells[row, 4].Value;
-				//	first_col = 2;
-				//	second_col = 4;
-				//	break;
-				//default:
-				//                   break;
-
-
-				//           }
-
 				if (bankType == bankType.Unknown)
 				{
 					Microsoft.VisualBasic.Interaction.MsgBox("Please choose bank");
@@ -135,7 +83,7 @@ namespace WindowsFormsApplication1
 				date = excelSheet.Cells[row, date_col].Value.ToString();
 				date = date.Substring(0, date.IndexOf(" ") + 1);
 
-				while (shop_name != null && !shop_name.Equals(""))
+				while (!String.IsNullOrEmpty(shop_name))
                 {
                     sum += money;
                     if (shop_category_hash.ContainsKey(shop_name))
@@ -173,6 +121,13 @@ namespace WindowsFormsApplication1
 
                     row++;
                     shop_name = excelSheet.Cells[row, first_col].Value;
+
+					//finished
+					if (String.IsNullOrEmpty(shop_name))
+					{
+						break;
+					}
+
 					date = excelSheet.Cells[row, date_col].Value.ToString();
 					date = date.Substring(0, date.IndexOf(" ") + 1);
 
@@ -186,7 +141,7 @@ namespace WindowsFormsApplication1
 
                 print_result(result_map);
                 print_attention(shops);
-                textBox2.Text += sum;
+                textBox2.Text += "Total amount: " + sum;
                 wb.Close();
                 excel.Quit();
                 Marshal.ReleaseComObject(excelSheet);
@@ -303,7 +258,9 @@ namespace WindowsFormsApplication1
                     textBox2.Text += "Pay attention you have " + value + " charges from " + key + "\r\n";
                 }
             }
-        }
+
+			textBox2.Text += "\r\n";
+		}
 
         public void print_result(Dictionary<string, double?> result_map)
         {
@@ -314,7 +271,9 @@ namespace WindowsFormsApplication1
 
                 textBox2.Text += key + " " + value + "\r\n";
             }
-        }
+
+			textBox2.Text += "\r\n";
+		}
 
         public void add_shop_to_result(Dictionary<string, double?> result_map, string cat, double money)
         {
@@ -337,7 +296,6 @@ namespace WindowsFormsApplication1
             {
                 File.CreateText(data_dir + exolidit_file);
             }
-
 
             System.IO.StreamReader br = new System.IO.StreamReader(data_dir + exolidit_file, System.Text.Encoding.GetEncoding(1255));
             try
@@ -478,30 +436,6 @@ namespace WindowsFormsApplication1
 
         private void button3_Click(object sender, EventArgs e)
         {
-			//try
-			//{
-			//    MailMessage mail = new MailMessage();
-			//    SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-
-			//    mail.From = new MailAddress("tomehtomeh@gmail.com");
-			//    //mail.To.Add("haco29@gmail.com");
-			//    mail.To.Add("tomehtomeh@gmail.com");
-			//    mail.Subject = "Test Mail";
-			//    mail.Body = "This is for testing SMTP mail from GMAIL from TH application";
-
-			//    SmtpServer.Port = 587;
-			//    SmtpServer.Credentials = new System.Net.NetworkCredential("tomehtomeh@gmail.com", "J6cd3q3p1358");
-			//    SmtpServer.EnableSsl = true;
-			//    SmtpServer.UseDefaultCredentials = false;
-			//    SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
-
-			//    SmtpServer.Send(mail);
-			//    MessageBox.Show("mail Send");
-			//}
-			//catch (Exception ex)
-			//{
-			//    MessageBox.Show(ex.ToString());
-			//}
 			textBox2.Text = "";
 
 		}
@@ -543,29 +477,6 @@ namespace WindowsFormsApplication1
             String selectedValue = (String)cmb.SelectedItem;
             int selectedIndex = cmb.SelectedIndex;
             month_col = selectedIndex + 3;
-            //switch (selectedValue)
-            //{
-            //    case "January":
-            //    case "February":
-            //    case "March":
-            //    case "April":
-            //    case "May":
-            //    case "June":
-            //    case "July":
-            //    case "August":
-            //    case "September":
-            //    case "October":
-            //        month_col = selectedIndex+5;
-            //        break;
-            //    case "November":
-            //        month_col = 3;
-            //        break;
-            //    case "December":
-            //        month_col = 4;
-            //        break;
-            //    default:
-            //        break;
-            //}
         }
 
         private void button5_Click(object sender, EventArgs e)

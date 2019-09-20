@@ -76,13 +76,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bankData.cs" />
-    <Compile Include="bankType.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Entities\bankData.cs" />
+    <Compile Include="Entities\bankType.cs" />
+    <Compile Include="App.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="App.Designer.cs">
+      <DependentUpon>App.cs</DependentUpon>
     </Compile>
     <Compile Include="Income.cs">
       <SubType>Form</SubType>
@@ -92,8 +92,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="App.resx">
+      <DependentUpon>App.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Income.resx">
       <DependentUpon>Income.cs</DependentUpon>

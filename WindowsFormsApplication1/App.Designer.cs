@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WindowsFormsApplication1
+namespace CreditCardAnalyzer
 {
     partial class Form1
     {

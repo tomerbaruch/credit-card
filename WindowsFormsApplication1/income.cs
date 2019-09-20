@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
-namespace WindowsFormsApplication1
+namespace CreditCardAnalyzer
 {
     public partial class Income : Form
     {

@@ -13,3 +13,18 @@ C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsAp
 C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.income.resources
 C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Credit card.csprojResolveAssemblyReference.cache
 C:\Users\tomerbaruch\Desktop\credit card\WindowsFormsApplication1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Credit card.csproj.CoreCompileInputs.cache
+D:\credit-card\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+D:\credit-card\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.manifest
+D:\credit-card\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.application
+D:\credit-card\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+D:\credit-card\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+D:\credit-card\WindowsFormsApplication1\obj\Debug\Credit card.csprojResolveAssemblyReference.cache
+D:\credit-card\WindowsFormsApplication1\obj\Debug\CreditCardAnalyzer.Form1.resources
+D:\credit-card\WindowsFormsApplication1\obj\Debug\CreditCardAnalyzer.Income.resources
+D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+D:\credit-card\WindowsFormsApplication1\obj\Debug\Credit card.csproj.GenerateResource.Cache
+D:\credit-card\WindowsFormsApplication1\obj\Debug\Credit card.csproj.CoreCompileInputs.cache
+D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe.manifest
+D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.application
+D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
