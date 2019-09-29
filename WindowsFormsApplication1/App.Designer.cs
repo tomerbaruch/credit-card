@@ -54,6 +54,7 @@ namespace CreditCardAnalyzer
 			this.button5 = new System.Windows.Forms.Button();
 			this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
 			this.label5 = new System.Windows.Forms.Label();
+			this.checkBox5 = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -206,6 +207,10 @@ namespace CreditCardAnalyzer
 			this.button3.UseVisualStyleBackColor = true;
 			this.button3.Click += new System.EventHandler(this.button3_Click);
 			// 
+			// openFileDialog4
+			// 
+			this.openFileDialog4.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog4_FileOk);
+			// 
 			// button4
 			// 
 			this.button4.Location = new System.Drawing.Point(12, 10);
@@ -259,6 +264,17 @@ namespace CreditCardAnalyzer
 			this.label5.TabIndex = 19;
 			this.label5.Text = "Choose date";
 			// 
+			// checkBox5
+			// 
+			this.checkBox5.AutoSize = true;
+			this.checkBox5.Location = new System.Drawing.Point(14, 46);
+			this.checkBox5.Name = "checkBox5";
+			this.checkBox5.Size = new System.Drawing.Size(109, 17);
+			this.checkBox5.TabIndex = 20;
+			this.checkBox5.Text = "Update Exolidit    ";
+			this.checkBox5.UseVisualStyleBackColor = true;
+			this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -266,6 +282,7 @@ namespace CreditCardAnalyzer
 			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
 			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.ClientSize = new System.Drawing.Size(684, 494);
+			this.Controls.Add(this.checkBox5);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.button5);
 			this.Controls.Add(this.comboBox1);
@@ -315,6 +332,7 @@ namespace CreditCardAnalyzer
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.BindingSource bindingSource1;
 		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.CheckBox checkBox5;
 	}
 }
 

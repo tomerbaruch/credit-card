@@ -7,6 +7,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
 using Microsoft.CSharp.RuntimeBinder;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace CreditCardAnalyzer
 {
@@ -24,8 +25,11 @@ namespace CreditCardAnalyzer
 
 		string shops_file = "shops.txt";
 		string exolidit_file = "exolidit.txt";
+		string exolidit_path_file = "exolidit_path.txt";
 		string banks_file = "banks.txt";
 
+		string exolidit_path;
+		bool loadResultToExolidit = false;
 
 		public Form1()
         {
@@ -35,11 +39,12 @@ namespace CreditCardAnalyzer
 			banks_hash = loadBanks();
 			updateBanksCheckboxes(banks_hash);
 
-			shop_category_hash = loadHash();
+			shop_category_hash = loadShopCategoryHash();
 			exolidit_hash = loadExoliditHash();
+			exolidit_path = loadExoliditPath();
 		}
 
-        private void link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		private void link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             string cat = Microsoft.VisualBasic.Interaction.InputBox(e.Link.LinkData.ToString(), "New category", "Enter category here", 450, 300);
         }
@@ -77,8 +82,8 @@ namespace CreditCardAnalyzer
 				date_col = bankDataChosen.date;
 
 				shop_name = excelSheet.Cells[row, first_col].Value.ToString();
-				string moneyText = Regex.Replace(excelSheet.Cells[row, second_col].Value, @"[^\d-]", "");
-				money = double.Parse(moneyText);
+				string moneyText = Regex.Replace(excelSheet.Cells[row, second_col].Value, @"[^\d-.]", "");
+				money = double.Parse(moneyText, CultureInfo.InvariantCulture);
 				//money = excelSheet.Cells[row, second_col].Value;
 				date = excelSheet.Cells[row, date_col].Value.ToString();
 				date = date.Substring(0, date.IndexOf(" ") + 1);
@@ -132,8 +137,8 @@ namespace CreditCardAnalyzer
 					date = date.Substring(0, date.IndexOf(" ") + 1);
 
 					if (excelSheet.Cells[row, second_col].Value != null && !excelSheet.Cells[row, second_col].Value.Equals("")) {
-						moneyText = Regex.Replace(excelSheet.Cells[row, second_col].Value, @"[^\d-]", "");
-						money = double.Parse(moneyText);
+						moneyText = Regex.Replace(excelSheet.Cells[row, second_col].Value, @"[^\d-.]", "");
+						money = double.Parse(moneyText, CultureInfo.InvariantCulture);
 					} else {
 						money = 0;
 					}
@@ -191,22 +196,26 @@ namespace CreditCardAnalyzer
 				i++;
 			}
 
-			if (checkboxes.Count == 1)
-			{
-				checkboxes.ElementAt(0).Checked = true;
-			}
+			//mark first as default
+			checkboxes.ElementAt(0).Checked = true;
 		}
 
 		private void saveToExolidit(Dictionary<string, double?> result_map, Dictionary<string, int> exolidit_map)
         {
             string path = openFileDialog4.FileName;
-            if (path.Equals(""))
+			if (!String.IsNullOrEmpty(path))
+			{
+				updateExoliditPathFile(path);
+				exolidit_path = path;
+			}
+
+            if (!loadResultToExolidit)
             {
                 return;
             }
 
             Excel.Application excel = new Excel.Application();
-            Excel.Workbook wb = excel.Workbooks.Open(path);
+            Excel.Workbook wb = excel.Workbooks.Open(exolidit_path);
             Excel.Worksheet worksheet = wb.ActiveSheet;
 
             foreach (string category in result_map.Keys)
@@ -247,7 +256,22 @@ namespace CreditCardAnalyzer
             Microsoft.VisualBasic.Interaction.MsgBox("Finished update Exolidit.");
         }
 
-        public void print_attention(Dictionary<string, int?> shops)
+		private void updateExoliditPathFile(string path)
+		{
+			try
+			{
+				using (StreamWriter sw = new StreamWriter(data_dir + exolidit_path_file, false, System.Text.Encoding.GetEncoding(1255), 512))
+				{
+					sw.WriteLine(path);
+					sw.Close();
+				}
+			}
+			catch (Exception)
+			{
+			}
+		}
+
+		public void print_attention(Dictionary<string, int?> shops)
         {
             foreach (string name in shops.Keys)
             {
@@ -380,7 +404,40 @@ namespace CreditCardAnalyzer
 			return bankMap;
 		}
 
-		public Dictionary<string, string> loadHash()
+		private string loadExoliditPath()
+		{
+			string exolidit_path = "";
+
+			if (!File.Exists(data_dir + exolidit_path_file))
+			{
+				File.CreateText(data_dir + exolidit_path_file);
+			}
+
+			System.IO.StreamReader br = new System.IO.StreamReader(data_dir + exolidit_path_file, System.Text.Encoding.GetEncoding(1255));
+			try
+			{
+				string line = br.ReadLine();
+
+				while (line != null)
+				{
+					exolidit_path = line;
+					line = br.ReadLine();
+				}
+			}
+			catch (Exception)
+			{
+
+			}
+			finally
+			{
+				br.Close();
+			}
+
+
+			return exolidit_path;
+		}
+
+		public Dictionary<string, string> loadShopCategoryHash()
         {
             Dictionary<string, string> shop_category_hash = new Dictionary<string, string>();
 
@@ -469,7 +526,7 @@ namespace CreditCardAnalyzer
             openFileDialog4.InitialDirectory = input_dir;
             openFileDialog4.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
             openFileDialog4.ShowDialog();
-        }
+		}
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -493,6 +550,23 @@ namespace CreditCardAnalyzer
 		private void label6_Click(object sender, EventArgs e)
 		{
 
+		}
+
+		private void checkBox5_CheckedChanged(object sender, EventArgs e)
+		{
+			if (string.IsNullOrEmpty(exolidit_path))
+			{
+				checkBox5.Checked = false;
+				Microsoft.VisualBasic.Interaction.MsgBox("Please choose exolidit file first");
+				return;
+			}
+
+			loadResultToExolidit = !loadResultToExolidit;
+		}
+
+		private void openFileDialog4_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			exolidit_path = openFileDialog4.FileName;
 		}
 	}
 
