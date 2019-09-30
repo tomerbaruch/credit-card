@@ -13,7 +13,6 @@ namespace CreditCardAnalyzer
 {
     public partial class Form1 : Form
     {
-        bankType bankType = bankType.Unknown;
 		string bankChosen;
         public static int month_col;
 		Dictionary<string, bankData> banks_hash = new Dictionary<string, bankData>();
@@ -29,6 +28,7 @@ namespace CreditCardAnalyzer
 		string banks_file = "banks.txt";
 
 		string exolidit_path;
+		string creditCardPath;
 		bool loadResultToExolidit = false;
 
 		public Form1()
@@ -42,6 +42,8 @@ namespace CreditCardAnalyzer
 			shop_category_hash = loadShopCategoryHash();
 			exolidit_hash = loadExoliditHash();
 			exolidit_path = loadExoliditPath();
+
+			loadCreditCardIfPresent();
 		}
 
 		private void link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -58,22 +60,27 @@ namespace CreditCardAnalyzer
 
 			try
             {
-                string path = openFileDialog1.FileName;
                 double sum = 0;
                 double money = 0;
 				string date;
 				int row = 0, first_col = 0, second_col = 0, date_col = -1 ;
                 String shop_name = "";
 
-                Excel.Application excel = new Excel.Application();
-                Excel.Workbook wb = excel.Workbooks.Open(path);
-                Excel.Worksheet excelSheet = wb.ActiveSheet;
+				if (string.IsNullOrEmpty(creditCardPath))
+				{
+					Microsoft.VisualBasic.Interaction.MsgBox("Please choose credit card file");
+					return;
+				}
 
-				if (bankType == bankType.Unknown)
+				if (string.IsNullOrEmpty(bankChosen))
 				{
 					Microsoft.VisualBasic.Interaction.MsgBox("Please choose bank");
 					return;
 				}
+
+				Excel.Application excel = new Excel.Application();
+                Excel.Workbook wb = excel.Workbooks.Open(creditCardPath);
+                Excel.Worksheet excelSheet = wb.ActiveSheet;
 
 				bankData bankDataChosen = banks_hash[bankChosen];
 				row = bankDataChosen.startRow;
@@ -174,6 +181,23 @@ namespace CreditCardAnalyzer
 
         }
 
+		private void loadCreditCardIfPresent()
+		{
+			var extensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+			{
+				".xls",
+				".xlsx",
+				".xlsm",
+			};
+			string[] files = Directory.GetFiles(input_dir);
+			var excelFilesCount = files.AsEnumerable().Count(filename =>
+								extensions.Contains(Path.GetExtension(filename)));
+			if (excelFilesCount == 1)
+			{
+				creditCardPath = files[0];
+			}
+		}
+
 		private void updateBanksCheckboxes(Dictionary<string, bankData> banks_hash)
 		{
 
@@ -243,6 +267,8 @@ namespace CreditCardAnalyzer
                     {
                     }
                 }
+
+				// update the excel itself
                 worksheet.Cells[row, month_col].Value =
                     worksheet.Cells[row, month_col].Value == null || worksheet.Cells[row, month_col].Value.Equals("") ?
                     value : worksheet.Cells[row, month_col].Value + value;
@@ -499,25 +525,21 @@ namespace CreditCardAnalyzer
 
 		private void checkBox1_CheckedChanged(object sender, EventArgs e)
 		{
-			bankType = bankType.Leumi;
 			bankChosen = checkBox1.Text;
 		}
 
 		private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            bankType = bankType.Cal;
 			bankChosen = checkBox2.Text;
 		}
 
 		private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            bankType = bankType.Poalim;
 			bankChosen = checkBox3.Text;
 		}
 
 		private void checkBox4_CheckedChanged(object sender, EventArgs e)
 		{
-			bankType = bankType.Benleumi;
 			bankChosen = checkBox4.Text;
 		}
 
@@ -567,6 +589,11 @@ namespace CreditCardAnalyzer
 		private void openFileDialog4_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			exolidit_path = openFileDialog4.FileName;
+		}
+
+		private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			creditCardPath = openFileDialog1.FileName;
 		}
 	}
 

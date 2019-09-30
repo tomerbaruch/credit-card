@@ -16,7 +16,6 @@ namespace CreditCardAnalyzer
     {
         String Name = "Tomer";
         String Type = "Work";
-        int row, col;
 
         public Income()
         {
