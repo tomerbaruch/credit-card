@@ -307,7 +307,7 @@ namespace CreditCardAnalyzer
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
-        }
+		}
 
         #endregion
 

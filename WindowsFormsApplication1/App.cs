@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using Microsoft.CSharp.RuntimeBinder;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using WindowsFormsApplication1;
 
 namespace CreditCardAnalyzer
 {
@@ -18,6 +19,7 @@ namespace CreditCardAnalyzer
 		Dictionary<string, bankData> banks_hash = new Dictionary<string, bankData>();
 		Dictionary<string, string> shop_category_hash = new Dictionary<string, string>();
 		Dictionary<string, int> exolidit_hash = new Dictionary<string, int>();
+		List<string> sortedCategories = new List<string>();
 
 		string data_dir = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\data\\";
 		string input_dir = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\input\\";
@@ -33,7 +35,9 @@ namespace CreditCardAnalyzer
 
 		public Form1()
         {
-            InitializeComponent();
+			this.StartPosition = FormStartPosition.CenterScreen;
+
+			InitializeComponent();
             comboBox1.SelectedIndex = 0;
 
 			banks_hash = loadBanks();
@@ -44,6 +48,13 @@ namespace CreditCardAnalyzer
 			exolidit_path = loadExoliditPath();
 
 			loadCreditCardIfPresent();
+			prepareSortedCategories();
+		}
+
+		private void prepareSortedCategories()
+		{
+			sortedCategories = shop_category_hash.Values.Distinct().ToList();
+			sortedCategories.Sort();
 		}
 
 		private void link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -93,7 +104,7 @@ namespace CreditCardAnalyzer
 				money = double.Parse(moneyText, CultureInfo.InvariantCulture);
 				//money = excelSheet.Cells[row, second_col].Value;
 				date = excelSheet.Cells[row, date_col].Value.ToString();
-				date = date.Substring(0, date.IndexOf(" ") + 1);
+				//date = date.Substring(0, date.IndexOf(" ") + 1);
 
 				while (!String.IsNullOrEmpty(shop_name))
                 {
@@ -113,7 +124,12 @@ namespace CreditCardAnalyzer
                     }
                     else
                     {
-                        string cat = Microsoft.VisualBasic.Interaction.InputBox("Enter new category for " + shop_name + "\nSum: " + money + "\nDate: " + date, "New category", "Enter category here", 450, 300).ToString();
+						CategoryForm categoryForm = new CategoryForm(sortedCategories, shop_name, money, date);
+						categoryForm.StartPosition = FormStartPosition.CenterParent;
+						categoryForm.ShowDialog();
+						string cat = categoryForm.result;
+
+						//string cat = Microsoft.VisualBasic.Interaction.InputBox("Enter new category for " + shop_name + "\nSum: " + money + "\nDate: " + date, "New category", "Enter category here", 450, 300).ToString();
 						if (!String.IsNullOrEmpty(cat) && !cat.Equals("Enter category here"))
 						{
 							try
@@ -123,6 +139,9 @@ namespace CreditCardAnalyzer
 									sw.WriteLine(shop_name + "#" + cat);
 									shop_category_hash[shop_name] = cat;
 									add_shop_to_result(result_map, cat, money);
+
+									sortedCategories.Add(cat);
+									sortedCategories.Sort();
 								}
 							}
 							catch (Exception)
@@ -141,7 +160,7 @@ namespace CreditCardAnalyzer
 					}
 
 					date = excelSheet.Cells[row, date_col].Value.ToString();
-					date = date.Substring(0, date.IndexOf(" ") + 1);
+					//date = date.Substring(0, date.IndexOf(" ") + 1);
 
 					if (excelSheet.Cells[row, second_col].Value != null && !excelSheet.Cells[row, second_col].Value.Equals("")) {
 						moneyText = Regex.Replace(excelSheet.Cells[row, second_col].Value, @"[^\d-.]", "");
