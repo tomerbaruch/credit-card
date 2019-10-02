@@ -69,6 +69,16 @@ namespace CreditCardAnalyzer
 
 			textBox2.Text = "";
 
+			if (string.IsNullOrEmpty(creditCardPath))
+			{
+				Microsoft.VisualBasic.Interaction.MsgBox("Please choose credit card file");
+				return;
+			}
+
+			Excel.Application excel = new Excel.Application();
+			Excel.Workbook wb = excel.Workbooks.Open(creditCardPath);
+			Excel.Worksheet excelSheet = wb.ActiveSheet;
+
 			try
             {
                 double sum = 0;
@@ -77,21 +87,15 @@ namespace CreditCardAnalyzer
 				int row = 0, first_col = 0, second_col = 0, date_col = -1 ;
                 String shop_name = "";
 
-				if (string.IsNullOrEmpty(creditCardPath))
-				{
-					Microsoft.VisualBasic.Interaction.MsgBox("Please choose credit card file");
-					return;
-				}
-
 				if (string.IsNullOrEmpty(bankChosen))
 				{
 					Microsoft.VisualBasic.Interaction.MsgBox("Please choose bank");
 					return;
 				}
 
-				Excel.Application excel = new Excel.Application();
-                Excel.Workbook wb = excel.Workbooks.Open(creditCardPath);
-                Excel.Worksheet excelSheet = wb.ActiveSheet;
+				//excel = new Excel.Application();
+    //            wb = excel.Workbooks.Open(creditCardPath);
+    //            excelSheet = wb.ActiveSheet;
 
 				bankData bankDataChosen = banks_hash[bankChosen];
 				row = bankDataChosen.startRow;
@@ -100,7 +104,8 @@ namespace CreditCardAnalyzer
 				date_col = bankDataChosen.date;
 
 				shop_name = excelSheet.Cells[row, first_col].Value.ToString();
-				string moneyText = Regex.Replace(excelSheet.Cells[row, second_col].Value, @"[^\d-.]", "");
+				string moneyTextValue = excelSheet.Cells[row, second_col].Value.ToString();
+				string moneyText = Regex.Replace(moneyTextValue, @"[^0-9*.-]+", "");
 				money = double.Parse(moneyText, CultureInfo.InvariantCulture);
 				//money = excelSheet.Cells[row, second_col].Value;
 				date = excelSheet.Cells[row, date_col].Value.ToString();
@@ -140,8 +145,11 @@ namespace CreditCardAnalyzer
 									shop_category_hash[shop_name] = cat;
 									add_shop_to_result(result_map, cat, money);
 
-									sortedCategories.Add(cat);
-									sortedCategories.Sort();
+									if (categoryForm.isNew)
+									{
+										sortedCategories.Add(cat);
+										sortedCategories.Sort();
+									}
 								}
 							}
 							catch (Exception)
@@ -163,7 +171,7 @@ namespace CreditCardAnalyzer
 					//date = date.Substring(0, date.IndexOf(" ") + 1);
 
 					if (excelSheet.Cells[row, second_col].Value != null && !excelSheet.Cells[row, second_col].Value.Equals("")) {
-						moneyText = Regex.Replace(excelSheet.Cells[row, second_col].Value, @"[^\d-.]", "");
+						moneyText = Regex.Replace(excelSheet.Cells[row, second_col].Value.ToString(), @"[^0-9*.-]+", "");
 						money = double.Parse(moneyText, CultureInfo.InvariantCulture);
 					} else {
 						money = 0;
@@ -173,32 +181,36 @@ namespace CreditCardAnalyzer
                 print_result(result_map);
                 print_attention(shops);
                 textBox2.Text += "Total amount: " + sum;
-                wb.Close();
-                excel.Quit();
-                Marshal.ReleaseComObject(excelSheet);
-                Marshal.ReleaseComObject(wb);
-                string user = Console.ReadLine();
+				//closeAllFiles(excel, wb, excelSheet);
+				string user = Console.ReadLine();
 
                 saveToExolidit(result_map, exolidit_hash);
-
-
             }
             catch (FileNotFoundException e)
             {
                 Console.WriteLine(e.ToString());
                 Console.Write(e.StackTrace);
-            }
+			}
             catch (IOException e)
             {
                 Console.WriteLine(e.ToString());
                 Console.Write(e.StackTrace);
-            }
-            catch (RuntimeBinderException ex)
+			}
+            catch (Exception ex)
             {
                 Microsoft.VisualBasic.Interaction.MsgBox("Credit card file is invalid");
-            }
+			}
 
-        }
+			closeAllFiles(excel, wb, excelSheet);
+		}
+
+		private void closeAllFiles(Excel.Application excel, Excel.Workbook wb, Excel.Worksheet excelSheet)
+		{
+			wb.Close();
+			excel.Quit();
+			Marshal.ReleaseComObject(excelSheet);
+			Marshal.ReleaseComObject(wb);
+		}
 
 		private void loadCreditCardIfPresent()
 		{

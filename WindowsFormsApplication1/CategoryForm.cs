@@ -29,6 +29,7 @@ namespace WindowsFormsApplication1
 		}
 
 		public string result;
+		public bool isNew = false;
 
 		private void button1_Click(object sender, EventArgs e)
 		{
@@ -38,7 +39,15 @@ namespace WindowsFormsApplication1
 				return;
 			}
 
-			result = comboBox1.SelectedItem == null ? comboBox1.Text : comboBox1.SelectedItem.ToString();
+			if (comboBox1.SelectedItem == null)
+			{
+				result = comboBox1.Text;
+				isNew = true;
+			}
+			else
+			{
+				result = comboBox1.SelectedItem.ToString();
+			}
 			this.Close();
 		}
 	}
