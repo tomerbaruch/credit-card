@@ -220,12 +220,12 @@ namespace CreditCardAnalyzer
 				".xlsx",
 				".xlsm",
 			};
-			string[] files = Directory.GetFiles(input_dir);
-			var excelFilesCount = files.AsEnumerable().Count(filename =>
-								extensions.Contains(Path.GetExtension(filename)));
-			if (excelFilesCount == 1)
-			{
-				creditCardPath = files[0];
+
+			var directory = new DirectoryInfo(input_dir);
+			FileInfo[] files = directory.GetFiles();
+
+			if (files.Count() > 0) {
+				creditCardPath = files.OrderByDescending(f => f.CreationTime).First().FullName;
 			}
 		}
 
