@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsApplication1
 {
-	partial class CategoryForm
+	partial class NewCategoryForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -35,6 +35,7 @@
 			this.shopLabel = new System.Windows.Forms.Label();
 			this.moneyLabel = new System.Windows.Forms.Label();
 			this.dateLabel = new System.Windows.Forms.Label();
+			this.ignore = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label2
@@ -56,7 +57,7 @@
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(113, 205);
+			this.button1.Location = new System.Drawing.Point(61, 205);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 23);
 			this.button1.TabIndex = 2;
@@ -100,9 +101,20 @@
 			this.dateLabel.TabIndex = 6;
 			this.dateLabel.Text = "label6";
 			// 
-			// CategoryForm
+			// ignore
+			// 
+			this.ignore.Location = new System.Drawing.Point(170, 205);
+			this.ignore.Name = "ignore";
+			this.ignore.Size = new System.Drawing.Size(75, 23);
+			this.ignore.TabIndex = 7;
+			this.ignore.Text = "ignore";
+			this.ignore.UseVisualStyleBackColor = true;
+			this.ignore.Click += new System.EventHandler(this.ignore_Click);
+			// 
+			// NewCategoryForm
 			// 
 			this.ClientSize = new System.Drawing.Size(320, 251);
+			this.Controls.Add(this.ignore);
 			this.Controls.Add(this.dateLabel);
 			this.Controls.Add(this.moneyLabel);
 			this.Controls.Add(this.shopLabel);
@@ -110,7 +122,7 @@
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.comboBox1);
 			this.Controls.Add(this.label2);
-			this.Name = "CategoryForm";
+			this.Name = "NewCategoryForm";
 			this.Text = "New Category";
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -127,5 +139,6 @@
 		private System.Windows.Forms.Label shopLabel;
 		private System.Windows.Forms.Label moneyLabel;
 		private System.Windows.Forms.Label dateLabel;
+		private System.Windows.Forms.Button ignore;
 	}
 }

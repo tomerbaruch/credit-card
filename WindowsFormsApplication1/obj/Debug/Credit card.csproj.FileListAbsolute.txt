@@ -30,4 +30,5 @@ D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
 D:\credit-card\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.CodeAnalysisLog.xml
 D:\credit-card\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.lastcodeanalysissucceeded
-D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.CategoryForm.resources
+D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.NewCategoryForm.resources
+D:\credit-card\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.NewVendor.resources

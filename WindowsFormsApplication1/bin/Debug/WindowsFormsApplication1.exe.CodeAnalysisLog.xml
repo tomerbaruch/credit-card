@@ -10,17 +10,24 @@
        <Types>
         <Type Name="Form1" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
+          <Member Name="#newBank_Click(System.Object,System.EventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2019-12-02 21:48:44Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\credit-card\WindowsFormsApplication1" File="App.cs" Line="640">Object 'sw' can be disposed more than once in method 'Form1.newBank_Click(object, EventArgs)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 640</Issue>
+            </Message>
+           </Messages>
+          </Member>
           <Member Name="#saveToExolidit(System.Collections.Generic.Dictionary`2&lt;System.String,System.Nullable`1&lt;System.Double&gt;&gt;,System.Collections.Generic.Dictionary`2&lt;System.String,System.Int32&gt;)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2019-10-02 20:09:29Z" FixCategory="DependsOnFix">
-             <Issue Certainty="75" Level="Warning" Path="D:\credit-card\WindowsFormsApplication1" File="App.cs" Line="295">Object 'sw' can be disposed more than once in method 'Form1.saveToExolidit(Dictionary&lt;string, double?&gt;, Dictionary&lt;string, int&gt;)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 295</Issue>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2019-12-02 21:48:44Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\credit-card\WindowsFormsApplication1" File="App.cs" Line="323">Object 'sw' can be disposed more than once in method 'Form1.saveToExolidit(Dictionary&lt;string, double?&gt;, Dictionary&lt;string, int&gt;)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 323</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#updateExoliditPathFile(System.String)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2019-10-02 20:09:29Z" FixCategory="DependsOnFix">
-             <Issue Certainty="75" Level="Warning" Path="D:\credit-card\WindowsFormsApplication1" File="App.cs" Line="324">Object 'sw' can be disposed more than once in method 'Form1.updateExoliditPathFile(string)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 324</Issue>
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2019-12-02 21:48:44Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="D:\credit-card\WindowsFormsApplication1" File="App.cs" Line="352">Object 'sw' can be disposed more than once in method 'Form1.updateExoliditPathFile(string)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 352</Issue>
             </Message>
            </Messages>
           </Member>
@@ -37,7 +44,7 @@
   <Rule TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202">
    <Name>Do not dispose objects multiple times</Name>
    <Description>A correctly implemented Dispose method can be called multiple times without throwing an exception. However, this is not guaranteed and to avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.</Description>
-   <Resolution Name="Default">Object {0} can be disposed more than once in method {1}. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 324</Resolution>
+   <Resolution Name="Default">Object {0} can be disposed more than once in method {1}. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 640</Resolution>
    <Owner>RuleOwner</Owner>
    <Url>http://msdn.microsoft.com/library/ms182334.aspx</Url>
    <Email />

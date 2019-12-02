@@ -15,6 +15,7 @@ namespace CreditCardAnalyzer
     public partial class Form1 : Form
     {
 		string bankChosen;
+		string bankSuspected;
         public static int month_col;
 		Dictionary<string, bankData> banks_hash = new Dictionary<string, bankData>();
 		Dictionary<string, string> shop_category_hash = new Dictionary<string, string>();
@@ -41,7 +42,7 @@ namespace CreditCardAnalyzer
             comboBox1.SelectedIndex = 0;
 
 			banks_hash = loadBanks();
-			updateBanksCheckboxes(banks_hash);
+			updateBanksRadios(banks_hash);
 
 			shop_category_hash = loadShopCategoryHash();
 			exolidit_hash = loadExoliditHash();
@@ -112,8 +113,7 @@ namespace CreditCardAnalyzer
 				//date = date.Substring(0, date.IndexOf(" ") + 1);
 
 				while (!String.IsNullOrEmpty(shop_name))
-                {
-                    sum += money;
+                {               
                     if (shop_category_hash.ContainsKey(shop_name))
                     {
                         if (shops.ContainsKey(shop_name))
@@ -126,16 +126,19 @@ namespace CreditCardAnalyzer
                         }
                         string cat = shop_category_hash[shop_name];
                         add_shop_to_result(result_map, cat, money);
-                    }
+
+						// add to sum
+						sum += money;
+					}
                     else
                     {
-						CategoryForm categoryForm = new CategoryForm(sortedCategories, shop_name, money, date);
+						NewCategoryForm categoryForm = new NewCategoryForm(sortedCategories, shop_name, money, date);
 						categoryForm.StartPosition = FormStartPosition.CenterParent;
 						categoryForm.ShowDialog();
 						string cat = categoryForm.result;
 
 						//string cat = Microsoft.VisualBasic.Interaction.InputBox("Enter new category for " + shop_name + "\nSum: " + money + "\nDate: " + date, "New category", "Enter category here", 450, 300).ToString();
-						if (!String.IsNullOrEmpty(cat) && !cat.Equals("Enter category here"))
+						if (!String.IsNullOrEmpty(cat) && !cat.Equals("Enter category here") && !categoryForm.ignoreRecord)
 						{
 							try
 							{
@@ -150,6 +153,9 @@ namespace CreditCardAnalyzer
 										sortedCategories.Add(cat);
 										sortedCategories.Sort();
 									}
+
+									// add to sum
+									sum += money;
 								}
 							}
 							catch (Exception)
@@ -158,7 +164,8 @@ namespace CreditCardAnalyzer
 						}
                     }
 
-                    row++;
+					// prepare next record
+					row++;
                     shop_name = excelSheet.Cells[row, first_col].Value;
 
 					//finished
@@ -168,7 +175,6 @@ namespace CreditCardAnalyzer
 					}
 
 					date = excelSheet.Cells[row, date_col].Value.ToString();
-					//date = date.Substring(0, date.IndexOf(" ") + 1);
 
 					if (excelSheet.Cells[row, second_col].Value != null && !excelSheet.Cells[row, second_col].Value.Equals("")) {
 						moneyText = Regex.Replace(excelSheet.Cells[row, second_col].Value.ToString(), @"[^0-9*.-]+", "");
@@ -198,7 +204,14 @@ namespace CreditCardAnalyzer
 			}
             catch (Exception ex)
             {
-                Microsoft.VisualBasic.Interaction.MsgBox("Credit card file is invalid");
+				String msg = "";
+				if (!String.IsNullOrEmpty(bankSuspected)) {
+					msg = String.Format("Credit card is suspected to be of type [{0}] or invalid", bankSuspected);
+				} else {
+					msg = "Credit card file is unknown or invalid";
+				}
+
+				Microsoft.VisualBasic.Interaction.MsgBox(msg, Microsoft.VisualBasic.MsgBoxStyle.OkOnly, "Credit card");
 			}
 
 			closeAllFiles(excel, wb, excelSheet);
@@ -227,32 +240,47 @@ namespace CreditCardAnalyzer
 			if (files.Count() > 0) {
 				creditCardPath = files.OrderByDescending(f => f.CreationTime).First().FullName;
 			}
+
+			checkSuspectedBank(creditCardPath);
 		}
 
-		private void updateBanksCheckboxes(Dictionary<string, bankData> banks_hash)
+		private void checkSuspectedBank(string creditCardPath)
+		{
+			if (creditCardPath.Contains("Export"))
+			{
+				bankSuspected = "Isracard";
+			}
+			else if (creditCardPath.Contains("Transactions"))
+			{
+				bankSuspected = "Visa Cal";
+			}
+		}
+
+		private void updateBanksRadios(Dictionary<string, bankData> banks_hash)
 		{
 
-			List<CheckBox> checkboxes = new List<CheckBox>();
-			checkboxes.Add(checkBox1);
-			checkboxes.Add(checkBox2);
-			checkboxes.Add(checkBox3);
-			checkboxes.Add(checkBox4);
+			List<RadioButton> radioButtons = new List<RadioButton>();
+			radioButtons.Add(radioButton1);
+			radioButtons.Add(radioButton2);
+			radioButtons.Add(radioButton3);
+			radioButtons.Add(radioButton4);
 
-			foreach (CheckBox checkbox in checkboxes) {
-				checkbox.Hide();
-				checkbox.Checked = false;
+			foreach (RadioButton radioButton in radioButtons)
+			{
+				radioButton.Hide();
+				radioButton.Checked = false;
 			}
 
 			int i = 0;
 			foreach (bankData bank in banks_hash.Values)
 			{
-				checkboxes.ElementAt(i).Text = bank.name;
-				checkboxes.ElementAt(i).Show();
+				radioButtons.ElementAt(i).Text = bank.name;
+				radioButtons.ElementAt(i).Show();
 				i++;
 			}
 
 			//mark first as default
-			checkboxes.ElementAt(0).Checked = true;
+			radioButtons.ElementAt(0).Checked = true;
 		}
 
 		private void saveToExolidit(Dictionary<string, double?> result_map, Dictionary<string, int> exolidit_map)
@@ -554,26 +582,6 @@ namespace CreditCardAnalyzer
 
 		}
 
-		private void checkBox1_CheckedChanged(object sender, EventArgs e)
-		{
-			bankChosen = checkBox1.Text;
-		}
-
-		private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-			bankChosen = checkBox2.Text;
-		}
-
-		private void checkBox3_CheckedChanged(object sender, EventArgs e)
-        {
-			bankChosen = checkBox3.Text;
-		}
-
-		private void checkBox4_CheckedChanged(object sender, EventArgs e)
-		{
-			bankChosen = checkBox4.Text;
-		}
-
         private void button4_Click_1(object sender, EventArgs e)
         {
             openFileDialog4.InitialDirectory = input_dir;
@@ -595,16 +603,6 @@ namespace CreditCardAnalyzer
             income.Show();
         }
 
-		private void label2_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void label6_Click(object sender, EventArgs e)
-		{
-
-		}
-
 		private void checkBox5_CheckedChanged(object sender, EventArgs e)
 		{
 			if (string.IsNullOrEmpty(exolidit_path))
@@ -625,6 +623,34 @@ namespace CreditCardAnalyzer
 		private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			creditCardPath = openFileDialog1.FileName;
+		}
+
+		private void newBank_Click(object sender, EventArgs e)
+		{
+			NewVendor newVendorForm = new NewVendor();
+			newVendorForm.StartPosition = FormStartPosition.CenterParent;
+			newVendorForm.ShowDialog();
+
+			try
+			{
+				using (StreamWriter sw = new StreamWriter(data_dir + banks_file, true, System.Text.Encoding.GetEncoding(1255), 512))
+				{
+					sw.WriteLine(newVendorForm.bankData.name + "#" + newVendorForm.bankData.startRow + "#" + newVendorForm.bankData.shop + "#" + newVendorForm.bankData.money + "#" + newVendorForm.bankData.date);
+					sw.Close();
+				}
+			}
+			catch (Exception)
+			{
+			}
+
+			banks_hash.Add(newVendorForm.bankData.name, newVendorForm.bankData);
+			updateBanksRadios(banks_hash);
+		}
+
+		private void radioButton_CheckedChanged(object sender, EventArgs e)
+		{
+			RadioButton radioButton = ((RadioButton)sender);
+			bankChosen = radioButton.Text;
 		}
 	}
 

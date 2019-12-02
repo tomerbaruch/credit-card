@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
-	public partial class CategoryForm : Form
+	public partial class NewCategoryForm : Form
 	{
-		public CategoryForm(List<string> categories, string shop_name, double money, string date)
+		public NewCategoryForm(List<string> categories, string shop_name, double money, string date)
 		{
 			InitializeComponent();
 			initData(categories, shop_name, money, date);
@@ -30,6 +30,7 @@ namespace WindowsFormsApplication1
 
 		public string result;
 		public bool isNew = false;
+		public bool ignoreRecord = false;
 
 		private void button1_Click(object sender, EventArgs e)
 		{
@@ -48,6 +49,12 @@ namespace WindowsFormsApplication1
 			{
 				result = comboBox1.SelectedItem.ToString();
 			}
+			this.Close();
+		}
+
+		private void ignore_Click(object sender, EventArgs e)
+		{
+			ignoreRecord = true;
 			this.Close();
 		}
 	}
